@@ -17,7 +17,7 @@ public class GamePlay {
      * @return GamePlay
      */
     public static GamePlay init(){
-        System.out.println("GamePlay init 진입");
+        //System.out.println("GamePlay init 진입");
         game = new BaseballGame();
         gameService = new GameService(game);
         return new GamePlay();
@@ -35,7 +35,7 @@ public class GamePlay {
                 game.status = GameStatus.ERROR;
                 continue;
             }
-            System.out.println("GamePlay :: play :: Game Status :: "+game.status);
+            //System.out.println("GamePlay :: play :: Game Status :: "+game.status);
         }
         while(!game.status.equals(GameStatus.END));
     }
@@ -56,12 +56,12 @@ public class GamePlay {
     }
 
     public Boolean getGameResult(List<Integer> userNumberList) throws Exception {
-        System.out.println("getGameResult: userNumberList :: "+ userNumberList );
-        System.out.println("getGameResult: comNumberList :: "+ game.getComputerNumber() );
+        //System.out.println("getGameResult: userNumberList :: "+ userNumberList );
+        //System.out.println("getGameResult: comNumberList :: "+ game.getComputerNumber() );
 
         // 게임결과 값
         // 서비스 내의 게임결과 메소드가 게임성공이 나왔을때
-        if(Objects.equals(game.getComputerNumber(), userNumberList)){
+        if(gameService.getGameScore(userNumberList)){
             // 성공 메시지 노출
             String nextStep = gameService.setRetryOrExit();
             // 다시 시작

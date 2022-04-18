@@ -28,8 +28,7 @@ public class BaseballGame {
     /**
      * 게임 룰 생성
      */
-    public BaseballGame(){
-        this.duplicated = Constant.BETTING_DUPLICATED;
+    public BaseballGame(){this.duplicated = Constant.BETTING_DUPLICATED;
         this.digit= Constant.BETTING_LENGTH;
         computerNumber = this.setComputerNumber();
         this.status = GameStatus.READY;
@@ -41,7 +40,7 @@ public class BaseballGame {
     public List<Integer> setComputerNumber(){
         // 컴퓨터 게임 랜덤 세팅 - 확인 사항 중복된 숫자 존재하는지
         this.computerNumber = BaseballUtils.getRandomNumbers(this.digit);
-        System.out.println("computerNumber :: "+computerNumber);
+        //System.out.println("computerNumber :: "+computerNumber);
         return computerNumber;
     }
 
