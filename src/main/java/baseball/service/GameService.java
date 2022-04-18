@@ -2,11 +2,13 @@ package baseball.service;
 
 import baseball.model.constant.BettingMessage;
 import baseball.model.constant.Constant;
+import baseball.model.constant.GameStatus;
 import baseball.model.tuple.BaseballGame;
 import baseball.model.tuple.BettingResult;
+import baseball.model.tuple.Player;
 import baseball.utils.BaseballUtils;
+import baseball.view.InputView;
 import camp.nextstep.edu.missionutils.Console;
-import java.util.List;
 
 
 public class GameService {
@@ -20,9 +22,8 @@ public class GameService {
      * 사용자 베팅 입력
      * @return String
      */
-    public static String setUserNumber() throws Exception {
-        System.out.print(BettingMessage.ASK_NUMBER.getMsg());
-        String userNumber = Console.readLine();
+    public static String getBaseballRecordAndViewPrint() throws Exception {
+        String userNumber = InputView.inputNumbers();
 
         // 사용자 입력 값 String 유효성 체크
         BaseballUtils.validCheck(userNumber);
@@ -35,8 +36,6 @@ public class GameService {
      * @return String
      */
     public String setRetryOrExit()  throws Exception{
-        System.out.println(BettingMessage.RESULT_SUCESS.getMsg());
-        System.out.println(BettingMessage.ASK_NEXT_STEP.getMsg());
         String nextStep = Console.readLine();
         BaseballUtils.validCheckExit(nextStep);
 
@@ -46,11 +45,11 @@ public class GameService {
     /**
      * 베팅 게임 점수 항목별로 계산
      */
-    public Boolean getGameScore(List<Integer> userNumberList){
+    public Player getGameScore(Player player){
         BettingResult result = new BettingResult(0,0,0);
 
         int idx = 0;
-        for(Integer userNumber : userNumberList){
+        for(Integer userNumber : player.userNumList){
             // 컴퓨터 베팅 내에 어떠한 것도 일치 하지 않으면
             if(!game.computerNumber.contains(userNumber)){
                 result.nothing++;
@@ -71,11 +70,13 @@ public class GameService {
             }
             idx++;
         }
-        System.out.println(BettingMessage.getBettingResultMsg(result));
+        player.result = BettingMessage.getBettingResultMsg(result);
+        System.out.println(player.result);
+
         // ALL 스트라이크
         if(result.strike == Constant.BETTING_WIN_STRIKE){
-            return true;
+            player.status = GameStatus.SUCCESS;
         }
-        return false;
+        return player;
     }
 }

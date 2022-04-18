@@ -1,82 +1,104 @@
 package baseball.domain;
 
-import baseball.model.constant.GameStatus;
-import baseball.model.tuple.BaseballGame;
-import baseball.model.tuple.Player;
-import baseball.service.GameService;
-import java.util.List;
-import java.util.Objects;
+import baseball.model.constant.PlayStatus;
+import baseball.model.tuple.BaseballRecord;
+import baseball.model.tuple.PlayerNumbers;
+import baseball.model.tuple.Random;
+import baseball.model.tuple.StrikeNumbers;
+import baseball.view.InputView;
+import baseball.view.ResultView;
 
 public class GamePlay {
+    private static final int COUNT = 3;
+    private static final int START_NUMBER = 1;
+    private static final int END_NUMBER = 9;
 
-    public static BaseballGame game;
-    public static Player player1;
-    public static GameService gameService;
-    /**
-     * 게임 초기화
-     * @return GamePlay
-     */
-    public static GamePlay init(){
-        //System.out.println("GamePlay init 진입");
-        game = new BaseballGame();
-        gameService = new GameService(game);
-        return new GamePlay();
-    }
+    private PlayStatus playStatus;
+    private StrikeNumbers strikeNumbers;
 
-    // 게임 시작
-    public void play(){
-        // 게임 시작
+    public void start() {
         do {
-            try {
-                startGame(); // 게임 시작
-                getGameResult(player1.userNumList); // 게임 진행
-            }catch (Exception e){
-                // 에러 난 것 노출처리
-                System.out.println(e.getMessage());
-                game.status = GameStatus.ERROR;
-                continue;
-            }
-        }
-        while(!game.status.equals(GameStatus.END));
+            play();
+            restartOrExit();
+        } while (!isExit());
     }
 
-    /**
-     * 게임 시작
-     * - 사용자 베팅 값 입력
-     * - 게임 새로 시작 시, 컴퓨터 베팅 값 초기화
-     */
-    public void startGame() throws Exception {
-        // 다시 시작 일때, 컴퓨터 베팅 초기화
-        if(game.status.equals(GameStatus.RETRY)){
-            game = new BaseballGame();
-        }
-        // 사용자 베팅 입력
-        player1 = new Player(gameService.setUserNumber());
-        game.status = GameStatus.START;
+    private boolean isExit() {
+        return playStatus == PlayStatus.EXIT;
     }
 
-    /**
-     * 게임 결과 확인
-     * @param userNumberList
-     * @throws Exception
-     * - 게임 재시작 or 진행 return TRUE
-     * - 게임 종료 return FALSE
-     */
-    public Boolean getGameResult(List<Integer> userNumberList) throws Exception {
-        // 게임결과 값
-        // 서비스 내의 게임결과 메소드가 게임성공이 나왔을때
-        if(gameService.getGameScore(userNumberList)){
-            // 성공 메시지 노출
-            String nextStep = gameService.setRetryOrExit();
-            // 다시 시작
-            game.status = GameStatus.RETRY;
-            // 게임 종료
-            if(nextStep.equals("2")){
-                game.status = GameStatus.END;
-                return Boolean.FALSE;
-            }
+    private void play() {
+        changePlayStatusToPlaying();
+        generateStrikeNumbers();
+
+        do {
+            inputPlayerNumbers();
+        } while (isPlaying());
+    }
+
+    private void changePlayStatusToPlaying() {
+        playStatus = PlayStatus.PLAYING;
+    }
+
+    private void inputPlayerNumbers() {
+        String inputStringNumbers = InputView.inputNumbers();
+        changeStatusIfRestartOrExit(inputStringNumbers);
+
+        if (!isPlaying()) {
+            return;
         }
 
-        return Boolean.TRUE;
+        BaseballRecord baseballRecord = getBaseballRecordAndViewPrint(inputStringNumbers);
+        changeStatusIfWin(baseballRecord);
     }
+
+    private boolean isPlaying() {
+        return playStatus == PlayStatus.PLAYING;
+    }
+
+    private BaseballRecord getBaseballRecordAndViewPrint(String inputStringNumbers) {
+        PlayerNumbers playerNumbers = new PlayerNumbers(inputStringNumbers);
+        BaseballRecord baseballRecord = new BaseballRecord(strikeNumbers, playerNumbers);
+        baseballRecord.updateRecordResult();
+
+        ResultView.printGameRecord(baseballRecord);
+        return baseballRecord;
+    }
+
+    private void changeStatusIfWin(BaseballRecord baseballRecord) {
+        if (!baseballRecord.isWin()) {
+            return;
+        }
+        ResultView.printWinMessage();
+        playStatus = PlayStatus.GAME_OVER;
+    }
+
+    private void restartOrExit() {
+        if (isRestart() || isExit()) {
+            return;
+        }
+        String inputContinue = InputView.inputContinue();
+        changeStatusIfRestartOrExit(inputContinue);
+    }
+
+    private boolean isRestart() {
+        return playStatus == PlayStatus.RESTART;
+    }
+
+    private void changeStatusIfRestartOrExit(String input) {
+        if (PlayStatus.fromValue(input) == PlayStatus.RESTART) {
+            playStatus = PlayStatus.RESTART;
+            return;
+        }
+        if (PlayStatus.fromValue(input) == PlayStatus.EXIT) {
+            playStatus = PlayStatus.EXIT;
+            ResultView.printExitMessage();
+        }
+    }
+
+    private void generateStrikeNumbers() {
+        strikeNumbers = new StrikeNumbers(Random.pickUniqueNumbersInRange(START_NUMBER, END_NUMBER, COUNT));
+    }
+
+
 }
