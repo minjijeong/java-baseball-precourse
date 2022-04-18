@@ -35,18 +35,17 @@ public final class BaseballUtils {
             throw new IllegalArgumentException();
         }
         // 숫자가 아닌 값이 포함된 경우
-
         return true;
     }
     /**
      * 랜덤 숫자 생성
      * digitNumber : 생성 자리수
-     * duplicated : 중복 생성 여부 확인
+     * duplicated : 중복 생성 가능 여부 확인
      */
     public static List<Integer> getRandomNumbers(int digitNumber, boolean duplicated){
         List<Integer> randomNumbers = new ArrayList<>();
         for(int i=0;i<digitNumber;i++){
-            randomNumbers.add(getRandomNumber(randomNumbers));
+            randomNumbers.add(getRandomNumber(randomNumbers, duplicated));
         }
         return randomNumbers;
      }
@@ -55,11 +54,14 @@ public final class BaseballUtils {
      * 램덤 숫자 중복 체크
      * - 중복 시, 재생성
      */
-    public static int getRandomNumber(List<Integer> numbers){
+    public static int getRandomNumber(List<Integer> numbers, boolean duplicated){
         List<Integer> returnNumbers = numbers;
         int newNumber = Randoms.pickNumberInRange(1,9);
-        if(returnNumbers.contains(newNumber)){
-            getRandomNumber(numbers);
+        // 각 숫자 중복 체크 - 중복 제한
+        if(!duplicated) {
+            if (returnNumbers.contains(newNumber)) {
+                return getRandomNumber(numbers, false);
+            }
         }
         return newNumber;
     }
