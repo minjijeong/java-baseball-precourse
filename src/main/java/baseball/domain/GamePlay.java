@@ -31,11 +31,11 @@ public class GamePlay {
                 startGame(); // 게임 시작
                 getGameResult(player1.userNumList); // 게임 진행
             }catch (Exception e){
+                // 에러 난 것 노출처리
                 System.out.println(e.getMessage());
                 game.status = GameStatus.ERROR;
                 continue;
             }
-            //System.out.println("GamePlay :: play :: Game Status :: "+game.status);
         }
         while(!game.status.equals(GameStatus.END));
     }
@@ -55,10 +55,14 @@ public class GamePlay {
         game.status = GameStatus.START;
     }
 
+    /**
+     * 게임 결과 확인
+     * @param userNumberList
+     * @throws Exception
+     * - 게임 재시작 or 진행 return TRUE
+     * - 게임 종료 return FALSE
+     */
     public Boolean getGameResult(List<Integer> userNumberList) throws Exception {
-        //System.out.println("getGameResult: userNumberList :: "+ userNumberList );
-        //System.out.println("getGameResult: comNumberList :: "+ game.getComputerNumber() );
-
         // 게임결과 값
         // 서비스 내의 게임결과 메소드가 게임성공이 나왔을때
         if(gameService.getGameScore(userNumberList)){

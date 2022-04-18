@@ -8,8 +8,7 @@ public class Player {
     public List<Integer> userNumList;
     // 사용자 베팅 입력값
     public String userNumberStr;
-    // 경기 결과
-    public String Result;
+
     public Player(String userNumber) throws Exception {
         this.userNumberStr = userNumber;
         this.userNumList = BaseballUtils.castToList(userNumberStr); // String to List<Integer>

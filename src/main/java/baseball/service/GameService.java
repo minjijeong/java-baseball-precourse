@@ -20,7 +20,7 @@ public class GameService {
      * 사용자 베팅 입력
      * @return String
      */
-    public String setUserNumber() throws Exception {
+    public static String setUserNumber() throws Exception {
         System.out.print(BettingMessage.ASK_NUMBER.getMsg());
         String userNumber = Console.readLine();
 
@@ -43,20 +43,27 @@ public class GameService {
         return nextStep;
     }
 
+    /**
+     * 베팅 게임 점수 항목별로 계산
+     */
     public Boolean getGameScore(List<Integer> userNumberList){
         BettingResult result = new BettingResult(0,0,0);
 
         int idx = 0;
         for(Integer userNumber : userNumberList){
+            // 컴퓨터 베팅 내에 어떠한 것도 일치 하지 않으면
             if(!game.computerNumber.contains(userNumber)){
                 result.nothing++;
+                idx++;
                 continue;
             }
+            // 각 자리의 베팅 값이 일치하면
             if(userNumber.equals(game.computerNumber.get(idx))){
                 result.strike++;
                 idx++;
                 continue;
             }
+            // 컴퓨터 베팅내에 존재하는 수이면
             if(game.computerNumber.contains(userNumber)){
                 result.ball++;
                 idx++;
@@ -64,8 +71,7 @@ public class GameService {
             }
             idx++;
         }
-        String test = BettingMessage.getBettingResultMsg(result);
-        System.out.println(test);
+        System.out.println(BettingMessage.getBettingResultMsg(result));
         // ALL 스트라이크
         if(result.strike == Constant.BETTING_WIN_STRIKE){
             return true;

@@ -48,6 +48,9 @@ public final class BaseballUtils  {
         return true;
     }
 
+    /**
+     * 종료 답변 값 유효성 체크
+     */
     public static boolean validCheckExit(String number) throws Exception{
         // 유효성 체크 로직
         // 빈값인 경우

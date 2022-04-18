@@ -28,11 +28,19 @@ public class BaseballGame {
     /**
      * 게임 룰 생성
      */
-    public BaseballGame(){this.duplicated = Constant.BETTING_DUPLICATED;
+    public BaseballGame(List<Integer> computerNumber){
+        this.duplicated = Constant.BETTING_DUPLICATED;
+        this.digit= Constant.BETTING_LENGTH;
+        this.computerNumber = computerNumber;
+        this.status = GameStatus.READY;
+    }
+    public BaseballGame(){
+        this.duplicated = Constant.BETTING_DUPLICATED;
         this.digit= Constant.BETTING_LENGTH;
         computerNumber = this.setComputerNumber();
         this.status = GameStatus.READY;
     }
+
     /**
      * 컴퓨터 배팅 숫자 생성
      * @return List<Integer>
