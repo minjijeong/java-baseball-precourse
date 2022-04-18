@@ -27,8 +27,14 @@ public class GamePlay {
     public void play(){
         // 게임 시작
         do {
-            startGame(); // 게임 시작
-            getGameResult(player1.userNumList); // 게임 진행
+            try {
+                startGame(); // 게임 시작
+                getGameResult(player1.userNumList); // 게임 진행
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+                game.status = GameStatus.ERROR;
+                continue;
+            }
             System.out.println("GamePlay :: play :: Game Status :: "+game.status);
         }
         while(!game.status.equals(GameStatus.END));
@@ -39,7 +45,7 @@ public class GamePlay {
      * - 사용자 베팅 값 입력
      * - 게임 새로 시작 시, 컴퓨터 베팅 값 초기화
      */
-    public void startGame(){
+    public void startGame() throws Exception {
         // 다시 시작 일때, 컴퓨터 베팅 초기화
         if(game.status.equals(GameStatus.RETRY)){
             game = new BaseballGame();
@@ -49,7 +55,7 @@ public class GamePlay {
         game.status = GameStatus.START;
     }
 
-    public Boolean getGameResult(List<Integer> userNumberList){
+    public Boolean getGameResult(List<Integer> userNumberList) throws Exception {
         System.out.println("getGameResult: userNumberList :: "+ userNumberList );
         System.out.println("getGameResult: comNumberList :: "+ game.getComputerNumber() );
 

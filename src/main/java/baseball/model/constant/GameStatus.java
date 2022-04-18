@@ -1,5 +1,5 @@
 package baseball.model.constant;
 
 public enum GameStatus {
-    READY, START, RETRY, END
+    READY, START, RETRY, END, ERROR
 }

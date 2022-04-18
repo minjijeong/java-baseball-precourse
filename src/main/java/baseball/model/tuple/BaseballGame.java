@@ -1,5 +1,6 @@
 package baseball.model.tuple;
 
+import baseball.model.constant.Constant;
 import baseball.model.constant.GameStatus;
 import baseball.utils.BaseballUtils;
 import java.util.*;
@@ -28,29 +29,18 @@ public class BaseballGame {
      * 게임 룰 생성
      */
     public BaseballGame(){
-        this.duplicated = false;
-        this.digit=3;
+        this.duplicated = Constant.BETTING_DUPLICATED;
+        this.digit= Constant.BETTING_LENGTH;
         computerNumber = this.setComputerNumber();
         this.status = GameStatus.READY;
     }
-    /**
-     * 게임 룰 생성
-     * - 자리수 , 중복여부 수동 세팅
-     */
-    public BaseballGame(Boolean duplicated, int digit){
-        this.duplicated = this.duplicated;
-        this.digit= this.digit;
-        computerNumber = this.setComputerNumber();
-        this.status = GameStatus.READY;
-    }
-
     /**
      * 컴퓨터 배팅 숫자 생성
      * @return List<Integer>
      */
     public List<Integer> setComputerNumber(){
         // 컴퓨터 게임 랜덤 세팅 - 확인 사항 중복된 숫자 존재하는지
-        this.computerNumber = BaseballUtils.getRandomNumbers(this.digit, this.duplicated);
+        this.computerNumber = BaseballUtils.getRandomNumbers(this.digit);
         System.out.println("computerNumber :: "+computerNumber);
         return computerNumber;
     }

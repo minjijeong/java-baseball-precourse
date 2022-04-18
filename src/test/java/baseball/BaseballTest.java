@@ -18,7 +18,7 @@ public class BaseballTest extends NsTest {
 
     private void assertSimpleTest() {
         BaseballUtils utils = new BaseballUtils();
-        List<Integer> randomNumbers = utils.getRandomNumbers(3,false);
+        List<Integer> randomNumbers = utils.getRandomNumbers(3);
         System.out.println(" randomNumbers :: "+ randomNumbers);
     }
 
